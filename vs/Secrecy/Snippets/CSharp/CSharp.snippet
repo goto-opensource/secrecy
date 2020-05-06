@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Azure Key Vault</Title>
+      <Shortcut>impakv</Shortcut>
+      <Description>Insert the imports needed for Azure Key Vault</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[// <PackageReference Include=\"Microsoft.Azure.KeyVault\" Version=\"3.0.5\" />
+//<PackageReference Include=\"Microsoft.Azure.KeyVault.Core\" Version=\"3.0.5\" />
+//<PackageReference Include=\"Microsoft.Azure.Services.AppAuthentication\" Version=\"1.4.0\" />
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import AWS KMS</Title>
+      <Shortcut>impkms</Shortcut>
+      <Description>Insert the imports needed for AWS KMS</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[// <PackageReference Include=\"AWSSDK.KeyManagementService\" Version=\"*\"/>
+using Amazon.KeyManagementService;
+using Amazon.KeyManagementService.Model;]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import AWS SSM</Title>
+      <Shortcut>impakv</Shortcut>
+      <Description>Insert the imports needed for AWS SSM</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[// <PackageReference Include=\"AWSSDK.SimpleSystemsManagement\" Version=\"*\"/>
+using Amazon.SimpleSystemsManagement;
+using Amazon.SimpleSystemsManagement.Model;]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Hashicorp Vault</Title>
+      <Shortcut>imphcv</Shortcut>
+      <Description>Insert the imports needed for Hashicorp Vault</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[// <PackageReference Include=\"Vault\" Version=\"*\" />
+using Vault;]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Credstash</Title>
+      <Shortcut>impcredstash</Shortcut>
+      <Description>Insert the imports needed for Credstash</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[// <PackageReference Include=\"Narochno.Credstash\" Version=\"*\"/>
+using Narochno.Credstash;
+using Amazon;]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Credstash builder</Title>
+      <Shortcut>credstashbuilder</Shortcut>
+      <Description>Insert the CredstashBuilder helper class</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[using Amazon;
+namespace Narochno.Credstash
+{
+    public class CredstashBuilder
+    {
+        public static Credstash WithRegion(RegionEndpoint region)
+        {
+            return new Credstash(new CredstashOptions() { Region = region }, new Amazon.KeyManagementService.AmazonKeyManagementServiceClient(region), new Amazon.DynamoDBv2.AmazonDynamoDBClient(region));
+        }
+    }
+}]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

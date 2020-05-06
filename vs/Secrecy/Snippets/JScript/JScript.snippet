@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Azure Key Vault</Title>
+      <Shortcut>impakv</Shortcut>
+      <Description>Insert the imports needed for Azure Key Vault</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="JavaScript">
+        <![CDATA[// npm install @azure/identity, @azure/keyvault-secrets
+const { DefaultAzureCredential } = require('@azure/identity');
+const { SecretClient } = require('@azure/keyvault-secrets');]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import AWS KMS</Title>
+      <Shortcut>impkms</Shortcut>
+      <Description>Insert the imports needed for AWS KMS</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="JavaScript">
+        <![CDATA[// npm install aws-sdk
+const aws = require('aws-sdk')]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import AWS SSM</Title>
+      <Shortcut>impakv</Shortcut>
+      <Description>Insert the imports needed for AWS SSM</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="JavaScript">
+        <![CDATA[// npm install aws-sdk
+const aws = require('aws-sdk')]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Hashicorp Vault</Title>
+      <Shortcut>imphcv</Shortcut>
+      <Description>Insert the imports needed for Hashicorp Vault</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="JavaScript">
+        <![CDATA[// npm install node-vault
+const Vault = require('node-vault')]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Credstash</Title>
+      <Shortcut>impcredstash</Shortcut>
+      <Description>Insert the imports needed for Credstash</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="JavaScript">
+        <![CDATA[// npm install nodecredstash
+const Credstash = require('nodecredstash');]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

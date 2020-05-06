@@ -1,0 +1,43 @@
+{
+	"Import Azure Key Vault": {
+		"prefix": "impakv",
+		"body": [
+			"# pip install azure-keyvault, azure-keyvault-keys, azure-keyvault-secrets, azure-core, azure-identity",
+			"from azure.keyvault.secrets import SecretClient",
+			"from azure.identity import DefaultAzureCredential, SharedTokenCacheCredential"
+		],
+		"description": "Insert the imports needed for Azure Key Vault"
+	},
+	"Import AWS KMS": {
+		"prefix": "impkms",
+		"body": [
+			"# pip install boto3",
+			"import boto3"
+		],
+		"description": "Insert the imports needed for AWS KMS"
+	},
+	"Import AWS SSM": {
+		"prefix": "impssm",
+		"body": [
+			"# pip install boto3",
+			"import boto3"
+		],
+		"description": "Insert the imports needed for AWS SSM"
+	},
+	"Import Hashicorp Vault": {
+		"prefix": "imphcv",
+		"body": [
+			"# pip install hvac",
+			"import hvac"
+		],
+		"description": "Insert the imports needed for Hashicorp Vault"
+	},
+	"Import Credstash": {
+		"prefix": "impcredstash",
+		"body": [
+			"# pip install credstash",
+			"import credstash"
+		],
+		"description": "Insert the imports needed for Credstash"
+	}
+}

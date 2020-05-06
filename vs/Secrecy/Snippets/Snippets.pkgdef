@@ -1,0 +1,9 @@
+﻿
+[$RootKey$\Languages\CodeExpansions\CSharp\Paths]
+"Secrecy - CSharp"="$PackageFolder$\CSharp"
+[$RootKey$\Languages\CodeExpansions\TypeScript\Paths]
+"Secrecy - TypeScript"="$PackageFolder$\TypeScript"
+[$RootKey$\Languages\CodeExpansions\JavaScript\Paths]
+"Secrecy - JavaScript"="$PackageFolder$\JScript"
+[$RootKey$\Languages\CodeExpansions\Python\Paths]
+"Secrecy - Python"="$PackageFolder$\Python"

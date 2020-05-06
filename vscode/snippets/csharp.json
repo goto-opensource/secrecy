@@ -1,0 +1,66 @@
+{
+	"Import Azure Key Vault": {
+		"prefix": "impakv",
+		"body": [
+			"// <PackageReference Include=\"Microsoft.Azure.KeyVault\" Version=\"3.0.5\" />",
+			"//<PackageReference Include=\"Microsoft.Azure.KeyVault.Core\" Version=\"3.0.5\" />",
+			"//<PackageReference Include=\"Microsoft.Azure.Services.AppAuthentication\" Version=\"1.4.0\" />",
+			"using Microsoft.Azure.KeyVault;",
+			"using Microsoft.Azure.Services.AppAuthentication;"
+		],
+		"description": "Insert the imports needed for Azure Key Vault"
+	},
+	"Import AWS KMS": {
+		"prefix": "impkms",
+		"body": [
+			"// <PackageReference Include=\"AWSSDK.KeyManagementService\" Version=\"*\"/>",
+			"using Amazon.KeyManagementService;",
+			"using Amazon.KeyManagementService.Model;"
+		],
+		"description": "Insert the imports needed for AWS KMS"
+	},
+	"Import AWS SSM": {
+		"prefix": "impssm",
+		"body": [
+			"//  <PackageReference Include=\"AWSSDK.SimpleSystemsManagement\" Version=\"*\"/>",
+			"using Amazon.SimpleSystemsManagement;",
+			"using Amazon.SimpleSystemsManagement.Model;"
+		],
+		"description": "Insert the imports needed for AWS SSM"
+	},
+	"Import Hashicorp Vault": {
+		"prefix": "imphcv",
+		"body": [
+			"// <PackageReference Include=\"Vault\" Version=\"*\" />",
+			"using Vault;"
+		],
+		"description": "Insert the imports needed for Hashicorp Vault"
+	},
+	"Import Credstash": {
+		"prefix": "impcredstash",
+		"body": [
+			"// <PackageReference Include=\"Narochno.Credstash\" Version=\"*\"/>",
+			"using Narochno.Credstash;",
+			"using Amazon;"
+		],
+		"description": "Insert the imports needed for Credstash"
+	},
+	"Credstash builder class": {
+		"prefix": "credstashbuilder",
+		"body": [
+			"using Amazon;",
+			"namespace Narochno.Credstash",
+			"{",
+			"    public class CredstashBuilder",
+			"    {",
+			"        public static Credstash WithRegion(RegionEndpoint region)",
+			"        {",
+			"            return new Credstash(new CredstashOptions() { Region = region }, new Amazon.KeyManagementService.AmazonKeyManagementServiceClient(region), new Amazon.DynamoDBv2.AmazonDynamoDBClient(region));",
+			"        }",
+			"    }",
+			"}",
+			""
+		],
+		"description": "Helper class to instiate Credstash client in C#."
+	}
+}

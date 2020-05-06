@@ -1,0 +1,224 @@
+{
+	"name": "secrecy",
+	"version": "2.1.0",
+	"publisher": "gudaolLMI",
+	"engines": {
+		"vscode": "^1.32.0"
+	},
+	"private": true,
+	"displayName": "Secrecy",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gudaolLMI/secrecy"
+	},
+	"bugs": {
+		"url": "https://github.com/gudaolLMI/secrecy/issues"
+	},
+	"extensionKind": [
+		"ui"
+	],
+	"categories": [
+		"Snippets",
+		"Other",
+		"Azure"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./dist/extension.js",
+	"scripts": {
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch",
+		"test-compile": "tsc -p ./"
+	},
+	"devDependencies": {
+		"@azure/identity": "1.1.0-preview1",
+		"@azure/keyvault-secrets": "4.0.0",
+		"@types/node": "^10.12.18",
+		"@types/nodecredstash": "2.0.0",
+		"@types/vscode": "^1.32.0",
+		"aws-sdk": "2.644.0",
+		"node-vault": "0.9.15",
+		"nodecredstash": "2.0.2",
+		"ts-loader": "^7.0.1",
+		"tslint": "^5.16.0",
+		"typescript": "^3.5.1",
+		"webpack": "^4.42.1",
+		"webpack-cli": "^3.3.11"
+	},
+	"dependencies": {
+		"nodecredstash": "2.0.2",
+		"@types/nodecredstash": "2.0.0",
+		"node-vault": "0.9.15",
+		"aws-sdk": "2.644.0",
+		"@azure/keyvault-secrets": "4.0.0",
+		"@azure/identity": "1.1.0-preview1"
+	},
+	"contributes": {
+		"configuration": {
+			"title": "Secrecy",
+			"properties": {
+				"secrecy.offerCredstash": {
+					"type": "boolean",
+					"default": true,
+					"description": "Offer to put secret in Credstash in Quick fixes."
+				},
+				"secrecy.nameForCredstashClient": {
+					"type": "string",
+					"default": "credstash",
+					"description": "Variable name for the Credstash client ($name in $name.getSecret calls)."
+				},
+				"secrecy.CredstashAWSRegion": {
+					"type": "string",
+					"default": "us-east-2",
+					"description": "AWS region for credstash to use. Use the same as KMS&SSM/workspace."
+				},
+				"secrecy.offerHashicorp": {
+					"type": "boolean",
+					"default": false,
+					"description": "Offer to put secret in Hashicorp in Quick fixes."
+				},
+				"secrecy.nameForHashicorpClient": {
+					"type": "string",
+					"default": "vault",
+					"description": "Variable name for the Hashicorp client ($name in $name.getSecret calls)."
+				},
+				"secrecy.hashicorpDefaultFieldForPuppet": {
+					"type": "string",
+					"default": "value",
+					"description": "Default field for secret with Hashicorp when using puppet."
+				},
+				"secrecy.HashicorpAddress": {
+					"type": "string",
+					"default": "https://localhost",
+					"description": "Hashicorp server address. INCLUDES protocol!"
+				},
+				"secrecy.HashicorpPort": {
+					"type": "string",
+					"default": "8200",
+					"description": "Hashicorp server port"
+				},
+				"secrecy.HashicorpSelfsigned": {
+					"type": "boolean",
+					"default": false,
+					"description": "In case of https address for hashicorp, self-signedness of cert."
+				},
+				"secrecy.offerAzureKV": {
+					"type": "boolean",
+					"default": true,
+					"description": "Offer to put secret in Azure Key Vault in Quick fixes."
+				},
+				"secrecy.nameForAzureKVClient": {
+					"type": "string",
+					"default": "azureKVClient",
+					"description": "Variable name for the Azure Key Vault client ($name in $name.getSecret calls)."
+				},
+				"secrecy.AzureKeyVaultAdress": {
+					"type": "string",
+					"default": "https://replaceme.azure.com",
+					"description": "Address of the Azure Key Vault instance! INCLUDES protocol! Make sure You have write access and the application has read access to it."
+				},
+				"secrecy.offerAWSKMS": {
+					"type": "boolean",
+					"default": true,
+					"description": "Offer to encrypt secret with AWS KMS in Quick fixes."
+				},
+				"secrecy.nameForAWSKMSClient": {
+					"type": "string",
+					"default": "kmsClient",
+					"description": "Variable name for the AWS KMS client ($name in $name.decrypt calls)."
+				},
+				"secrecy.AWSKMSRegion": {
+					"type": "string",
+					"default": "us-east-2",
+					"description": "AWS region for KMS to use. Use the same as Credstash&SSM/workspace."
+				},
+				"secrecy.offerAWSSSM": {
+					"type": "boolean",
+					"default": true,
+					"description": "Offer to put secret in AWS SSM in Quick fixes."
+				},
+				"secrecy.nameForAWSSSMClient": {
+					"type": "string",
+					"default": "ssmClient",
+					"description": "Variable name for the AWS SSM client ($name in $name.getParam calls)."
+				},
+				"secrecy.AWSSSMRegion": {
+					"type": "string",
+					"default": "us-east-2",
+					"description": "AWS region for SSM to use. Use the same as KMS&Credstash/workspace."
+				},
+				"secrecy.newClientForHCV": {
+					"type": "boolean",
+					"default": true,
+					"description": "New client for HCV on every 'completion'"
+				},
+				"secrecy.newClientForKMS": {
+					"type": "boolean",
+					"default": true,
+					"description": "New client for AWS KMS on every 'completion'"
+				},
+				"secrecy.newClientForSSM": {
+					"type": "boolean",
+					"default": true,
+					"description": "New client for AWS SSM on every 'completion'"
+				},
+				"secrecy.newClientForCredstash": {
+					"type": "boolean",
+					"default": true,
+					"description": "New client for Credstash on every 'completion'. With C#, uses CredstashBuilder - find it in the snippets and add it to Your project!"
+				},
+				"secrecy.newClientForAKV": {
+					"type": "boolean",
+					"default": true,
+					"description": "New client for Azure Key Vault on every 'completion'"
+				}
+			}
+		},
+		"snippets": [
+			{
+				"language": "javascript",
+				"path": "snippets/jsts.json"
+			},
+			{
+				"language": "typescript",
+				"path": "snippets/jsts.json"
+			},
+			{
+				"language": "csharp",
+				"path": "snippets/csharp.json"
+			},
+			{
+				"language": "java",
+				"path": "snippets/java.json"
+			},
+			{
+				"language": "python",
+				"path": "snippets/python.json"
+			}
+		]
+	},
+	"keywords": [
+		"security",
+		"secure storage",
+		"secret storage",
+		"vault",
+		"KMS",
+		"SSM",
+		"hashicorp",
+		"credstash",
+		"akv",
+		"azure key vault",
+		"key vault",
+		"credential store",
+		"credential storage",
+		"secret",
+		"aws kms",
+		"aws ssm",
+		"encrypt",
+		"encryption",
+		"hcv",
+		"hashicorp vault"
+	]
+}

@@ -1,0 +1,56 @@
+{
+	"Import Azure Key Vault": {
+		"prefix": "impakv",
+		"body": [
+			"// https://search.maven.org/artifact/com.azure/azure-keyvault-secrets",
+			"// https://search.maven.org/artifact/com.azure/azure-identity",
+			"import com.azure.core.credential.TokenCredential;",
+			"import com.azure.security.keyvault.secrets.SecretClientBuilder;",
+			"import com.azure.security.keyvault.secrets.models.KeyVaultSecret;",
+			"import com.azure.identity.DefaultAzureCredentialBuilder;",
+			"import com.azure.security.keyvault.secrets.SecretClient;"
+		],
+		"description": "Insert the imports needed for Azure Key Vault"
+	},
+	"Import AWS KMS": {
+		"prefix": "impkms",
+		"body": [
+			"// https://search.maven.org/artifact/com.amazonaws/aws-java-sdk-kms",
+			"import com.amazonaws.auth.ContainerCredentialsProvider;",
+			"import com.amazonaws.util.EC2MetadataUtils;",
+			"import com.amazonaws.regions.Regions;",
+			"import com.amazonaws.services.kms.AWSKMS;",
+			"import com.amazonaws.services.kms.AWSKMSClient;",
+			"import com.amazonaws.services.kms.AWSKMSClientBuilder;",
+			"import com.amazonaws.services.kms.model.DecryptRequest;",
+			"import com.amazonaws.services.s3.AmazonS3;",
+			"import com.amazonaws.services.s3.AmazonS3ClientBuilder;",
+			"import com.amazonaws.util.Base64;"
+		],
+		"description": "Insert the imports needed for AWS KMS"
+	},
+	"Import AWS SSM": {
+		"prefix": "impssm",
+		"body": [
+			"// https://search.maven.org/artifact/com.amazonaws/aws-java-sdk-ssm",
+			"import com.amazonaws.auth.ContainerCredentialsProvider;",
+			"import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;",
+			"import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClient;",
+			"import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;",
+			"import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;",
+			"import com.amazonaws.services.simplesystemsmanagement.model.GetParameterResult;"
+		],
+		"description": "Insert the imports needed for AWS SSM"
+	},
+	"Import Hashicorp Vault": {
+		"prefix": "imphcv",
+		"body": [
+			"// https://search.maven.org/artifact/com.bettercloud/vault-java-driver",
+			"import com.bettercloud.vault.SslConfig;",
+			"import com.bettercloud.vault.Vault;",
+			"import com.bettercloud.vault.VaultConfig;",
+			"import com.bettercloud.vault.response.LogicalResponse;"
+		],
+		"description": "Insert the imports needed for Hashicorp Vault"
+	}
+}

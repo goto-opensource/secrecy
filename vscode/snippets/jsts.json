@@ -1,0 +1,43 @@
+{
+	"Import Azure Key Vault": {
+		"prefix": "impakv",
+		"body": [
+			"// npm install @azure/identity, @azure/keyvault-secrets",
+			"const { DefaultAzureCredential } = require('@azure/identity');",
+			"const { SecretClient } = require('@azure/keyvault-secrets');"
+		],
+		"description": "Insert the imports needed for Azure Key Vault"
+	},
+	"Import AWS KMS": {
+		"prefix": "impkms",
+		"body": [
+			"// npm install aws-sdk",
+			"const aws = require('aws-sdk')"
+		],
+		"description": "Insert the imports needed for AWS KMS"
+	},
+	"Import AWS SSM": {
+		"prefix": "impssm",
+		"body": [
+			"// npm install aws-sdk",
+			"const aws = require('aws-sdk')"
+		],
+		"description": "Insert the imports needed for AWS SSM"
+	},
+	"Import Hashicorp Vault": {
+		"prefix": "imphcv",
+		"body": [
+			"// npm install node-vault",
+			"const Vault = require('node-vault')"
+		],
+		"description": "Insert the imports needed for Hashicorp Vault"
+	},
+	"Import Credstash": {
+		"prefix": "impcredstash",
+		"body": [
+			"// npm install nodecredstash",
+			"const Credstash = require('nodecredstash');"
+		],
+		"description": "Insert the imports needed for Credstash"
+	}
+}

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Azure Key Vault</Title>
+      <Shortcut>impakv</Shortcut>
+      <Description>Insert the imports needed for Azure Key Vault</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="Python">
+        <![CDATA[# pip install azure-keyvault, azure-keyvault-keys, azure-keyvault-secrets, azure-core, azure-identity
+from azure.keyvault.secrets import SecretClient
+from azure.identity import DefaultAzureCredential, SharedTokenCacheCredential]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import AWS KMS</Title>
+      <Shortcut>impkms</Shortcut>
+      <Description>Insert the imports needed for AWS KMS</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="Python">
+        <![CDATA[# pip install boto3
+import boto3]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import AWS SSM</Title>
+      <Shortcut>impakv</Shortcut>
+      <Description>Insert the imports needed for AWS SSM</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="Python">
+        <![CDATA[# pip install boto3
+import boto3]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Hashicorp Vault</Title>
+      <Shortcut>imphcv</Shortcut>
+      <Description>Insert the imports needed for Hashicorp Vault</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="Python">
+        <![CDATA[# pip install hvac
+import hvac]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Import Credstash</Title>
+      <Shortcut>impcredstash</Shortcut>
+      <Description>Insert the imports needed for Credstash</Description>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="Python">
+        <![CDATA[# pip install credstash
+import credstash]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

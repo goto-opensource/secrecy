@@ -1,0 +1,14 @@
+﻿<Window x:Class="Secrecy.Prompt"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Secrecy"
+             mc:Ignorable="d" Background="DarkSalmon" KeyDown="onKeyDown" WindowStyle="None" HorizontalAlignment="Center" VerticalAlignment="Center" Height="55">
+    <!-- Incredibly simplified XAML -->
+    <StackPanel KeyDown="onKeyDown" VerticalAlignment="Center">
+        <TextBlock x:Name="promptMessage" KeyDown="onKeyDown" Text="Enter some text" HorizontalAlignment="Center" />
+        <TextBox x:Name="ResponseTextBox" KeyDown="onKeyDown" RenderTransformOrigin="0.5,0.5">
+        </TextBox>
+    </StackPanel>
+</Window>
