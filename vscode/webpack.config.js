@@ -1,4 +1,5 @@
 //@ts-check
+const TerserPlugin = require('terser-webpack-plugin')
 
 'use strict';
 
@@ -19,6 +20,7 @@ const config = {
 	devtool: 'source-map',
 	externals: {
 		vscode: 'commonjs vscode' // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
+		, keytar: 'keytar'
 	},
 	resolve: {
 		// support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
@@ -38,4 +40,25 @@ const config = {
 		]
 	}
 };
-module.exports = config;
+
+// Thanks to https://github.com/Azure/ms-rest-nodeauth/issues/83#issuecomment-690927491
+module.exports =  (env, argv) => {
+
+	if (argv.mode === 'production') {
+		config.mode = 'production'
+		config.devtool = 'source-map'
+		config.optimization = {
+			...(config.optimization || {}),
+			minimize: true,
+			minimizer: [
+				new TerserPlugin({
+					terserOptions: {
+						keep_fnames: /AbortSignal/,
+					},
+				}),
+			],
+		}
+	}
+
+	return config
+}

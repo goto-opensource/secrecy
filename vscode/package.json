@@ -1,6 +1,6 @@
 {
 	"name": "secrecy",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"publisher": "gudaolLMI",
 	"engines": {
 		"vscode": "^1.32.0"
@@ -33,27 +33,30 @@
 		"test-compile": "tsc -p ./"
 	},
 	"devDependencies": {
-		"@azure/identity": "1.1.0-preview1",
+		"@azure/identity": "1.2.2",
 		"@azure/keyvault-secrets": "4.0.0",
-		"@types/node": "^10.12.18",
-		"@types/nodecredstash": "2.0.0",
+		"@types/node": "^14.14.25",
+		"@types/nodecredstash": "2.0.1",
 		"@types/vscode": "^1.32.0",
 		"aws-sdk": "2.644.0",
+		"express": "^4.16.3",
+		"keytar": "^7.3.0",
 		"node-vault": "0.9.15",
 		"nodecredstash": "2.0.2",
+		"terser-webpack-plugin": "^5.1.1",
 		"ts-loader": "^7.0.1",
-		"tslint": "^5.16.0",
-		"typescript": "^3.5.1",
-		"webpack": "^4.42.1",
-		"webpack-cli": "^3.3.11"
+		"tslint": "^6.1.3",
+		"typescript": "^4.1.3",
+		"webpack": "^5.21.2",
+		"webpack-cli": "^4.5.0"
 	},
 	"dependencies": {
-		"nodecredstash": "2.0.2",
-		"@types/nodecredstash": "2.0.0",
-		"node-vault": "0.9.15",
-		"aws-sdk": "2.644.0",
-		"@azure/keyvault-secrets": "4.0.0",
-		"@azure/identity": "1.1.0-preview1"
+		"@azure/identity": "1.2.2",
+		"@azure/keyvault-secrets": "4.1.0",
+		"@types/nodecredstash": "2.0.1",
+		"aws-sdk": "2.839.0",
+		"node-vault": "0.9.21",
+		"nodecredstash": "2.0.2"
 	},
 	"contributes": {
 		"configuration": {
@@ -196,6 +199,18 @@
 			{
 				"language": "python",
 				"path": "snippets/python.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "secrecy.recreate",
+				"title": "Recreate worker clients after configuration",
+				"category": "Secrecy"
+			},
+			{
+				"command": "secrecy.replaceHCVToken",
+				"title": "Replace Hashicorp token",
+				"category": "Secrecy"
 			}
 		]
 	},

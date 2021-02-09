@@ -22,6 +22,8 @@ const PUTINHASHICORPCOMMAND = "secrecy.putInHashicorp";
 const ENCRYPTWITHKMSCOMMAND = "secrecy.encryptWithKMS";
 const PUTINSSMCOMMAND = "secrecy.putInSSM";
 const PUTINAZUREKVCOMMAND = "secrecy.putInAzureKV";
+const RECREATE = "secrecy.recreate";
+const REPLACEHCVTOKEN = "secrecy.replaceHCVToken";
 
 export function activate(_context: vscode.ExtensionContext) {
 	_context.subscriptions.push(
@@ -30,6 +32,8 @@ export function activate(_context: vscode.ExtensionContext) {
 		}));
 
 	_context.subscriptions.push(
+		vscode.commands.registerCommand(RECREATE, init),
+		vscode.commands.registerCommand(REPLACEHCVTOKEN, setUpHCVToken),
 		vscode.commands.registerCommand(PUTINCREDSTASHCOMMAND, Secrecy.putInCredStash),
 		vscode.commands.registerCommand(PUTINHASHICORPCOMMAND, Secrecy.putInHashicorp),
 		vscode.commands.registerCommand(ENCRYPTWITHKMSCOMMAND, Secrecy.encryptWithKMS),
@@ -37,6 +41,10 @@ export function activate(_context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand(PUTINAZUREKVCOMMAND, Secrecy.putInAzureKV),
 	);
 	context = _context;
+	init()
+}
+
+function init() {
 	if (vscode.workspace.getConfiguration().get("secrecy.offerHashicorp") === true) {
 		initVault();
 	}
@@ -58,7 +66,6 @@ export function activate(_context: vscode.ExtensionContext) {
 		const credential = new DefaultAzureCredential();
 		const url = vscode.workspace.getConfiguration().get<string>("secrecy.AzureKeyVaultAdress", ""); // it has a default value so no worries. makes TS happy.
 		kvClient = new SecretClient(url, credential);
-
 	}
 }
 
@@ -153,29 +160,34 @@ export class Secrecy implements vscode.CodeActionProvider {
 		if (vault === undefined || vault.token === undefined) {
 			await initVault();
 		}
-		vault.write(`${engine}/${secret}`, obj);
-		const edit = new vscode.WorkspaceEdit();
-		switch (doc.languageId) {
-			case "javascript":
-			case "typescript":
-				edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.read('${engine}/${secret}'))['data']['${key}']`);
-				break;
-			case "python":
-				edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.secrets.kv.v1.read_secret(mount_point="${engine}", path='${secret}')['data']['${key}']`);
-				break;
-			case "csharp":
-				edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.Secret.Read<Dictionary<String, String>>("${engine}/${secret}")).Data["${key}"]`);
-				break;
-			case "java":
-				edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.logical().read("${engine}/${secret}").getData().get("${key}")`);
-				break;
-			case "puppet":
-				edit.replace(doc.uri, new vscode.Range(range.start, range.end), `lookup(${secret})`);
-				break;
-			default:
-				break;
+		vault.write(`${engine}/${secret}`, obj).then((value: any) => {
+			const edit = new vscode.WorkspaceEdit();
+			switch (doc.languageId) {
+				case "javascript":
+				case "typescript":
+					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.read('${engine}/${secret}'))['data']['${key}']`);
+					break;
+				case "python":
+					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.secrets.kv.v1.read_secret(mount_point="${engine}", path='${secret}')['data']['${key}']`);
+					break;
+				case "csharp":
+					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.Secret.Read<Dictionary<String, String>>("${engine}/${secret}")).Data["${key}"]`);
+					break;
+				case "java":
+					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${vscode.workspace.getConfiguration().get("secrecy.nameForHashicorpClient")}.logical().read("${engine}/${secret}").getData().get("${key}")`);
+					break;
+				case "puppet":
+					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `lookup(${secret})`);
+					break;
+				default:
+					break;
+			}
+			vscode.workspace.applyEdit(edit);
 		}
-		vscode.workspace.applyEdit(edit);
+		).catch((err: Error) => {
+			console.error(err);
+			vscode.window.showErrorMessage(err.message);
+		});
 	}
 
 	public static async putInCredStash(doc: vscode.TextDocument, range: vscode.Range): Promise<void> {
@@ -198,23 +210,27 @@ export class Secrecy implements vscode.CodeActionProvider {
 						break;
 				}
 			}
-			credstash.putSecret({ name: name, secret: value, version: version + 1 });
-			const edit = new vscode.WorkspaceEdit();
-			switch (doc.languageId) {
-				case "javascript":
-				case "typescript":
-					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForCredstash") ? "new Credstash({ awsOpts: { region: '" + vscode.workspace.getConfiguration().get("secrecy.CredstashAWSRegion") + "' } })" : vscode.workspace.getConfiguration().get("secrecy.nameForCredstashClient")}.getSecret({ name: '${name}', version: ${version + 1} })`);
-					break;
-				case "python":
-					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForCredstash") ? "credstash" : vscode.workspace.getConfiguration().get("secrecy.nameForCredstashClient")}.getSecret(name='${name}', version=${version + 1})`);
-					break;
-				case "csharp":
-					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForCredstash") ? `CredstashBuilder.WithRegion(Amazon.RegionEndpoint.GetBySystemName("${vscode.workspace.getConfiguration().get("secrecy.CredstashAWSRegion")}"))` : vscode.workspace.getConfiguration().get("secrecy.nameForCredstashClient")}.GetSecretAsync(name: "${name}", version: "${version + 1}" )`);
-					break;
-				default:
-					break;
-			}
-			vscode.workspace.applyEdit(edit);
+			credstash.putSecret({ name: name, secret: value, version: version + 1 }).then(() => {
+				const edit = new vscode.WorkspaceEdit();
+				switch (doc.languageId) {
+					case "javascript":
+					case "typescript":
+						edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForCredstash") ? "new Credstash({ awsOpts: { region: '" + vscode.workspace.getConfiguration().get("secrecy.CredstashAWSRegion") + "' } })" : vscode.workspace.getConfiguration().get("secrecy.nameForCredstashClient")}.getSecret({ name: '${name}', version: ${version + 1} })`);
+						break;
+					case "python":
+						edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForCredstash") ? "credstash" : vscode.workspace.getConfiguration().get("secrecy.nameForCredstashClient")}.getSecret(name='${name}', version=${version + 1})`);
+						break;
+					case "csharp":
+						edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForCredstash") ? `CredstashBuilder.WithRegion(Amazon.RegionEndpoint.GetBySystemName("${vscode.workspace.getConfiguration().get("secrecy.CredstashAWSRegion")}"))` : vscode.workspace.getConfiguration().get("secrecy.nameForCredstashClient")}.GetSecretAsync(name: "${name}", version: "${version + 1}" )`);
+						break;
+					default:
+						break;
+				}
+				vscode.workspace.applyEdit(edit);
+			}).catch((err: Error) => {
+				console.error(err);
+				vscode.window.showErrorMessage(err.message);
+			});
 		}
 	}
 
@@ -225,7 +241,11 @@ export class Secrecy implements vscode.CodeActionProvider {
 		value = value_validated;
 		let keys: Array<{ AliasName: string, AliasArn: string }>;
 		kmsClient.listAliases({}, async function (err: Error, data: { Aliases: Array<{ AliasName: string, AliasArn: string }> }) {
-			if (err) { vscode.window.showErrorMessage(err.message); return; }
+			if (err) {
+				console.error(err);
+				vscode.window.showErrorMessage(err.message);
+				return;
+			}
 			else {
 				keys = data.Aliases;
 				const keyid = await vscode.window.showQuickPick(keys.map(e => e.AliasName), { placeHolder: "Choose a KMS key! The application needs to have Decrypt permissions with this key." });
@@ -276,7 +296,9 @@ export class Secrecy implements vscode.CodeActionProvider {
 			};
 			ssmClient.getParameter(params, async function (err: Error, data: { Parameter: { Name: string, Version: number } }) {
 				let version = 0;
-				if (err) { } else {
+				if (err) {
+					/* ignore this */
+				} else {
 					version = data.Parameter.Version;
 				}
 				if (version >= 1) {
@@ -293,7 +315,11 @@ export class Secrecy implements vscode.CodeActionProvider {
 				}
 				let keys: Array<{ AliasName: string, AliasArn: string }>;
 				kmsClient.listAliases({}, async function (err: Error, data: { Aliases: Array<{ AliasName: string, AliasArn: string }> }) {
-					if (err) { vscode.window.showErrorMessage(err.message); return; }
+					if (err) {
+						console.error(err);
+						vscode.window.showErrorMessage(err.message);
+						return;
+					}
 					else {
 						keys = data.Aliases;
 						const keyid = await vscode.window.showQuickPick(keys.map(e => e.AliasName), { placeHolder: "Choose a KMS key to encrypt the parameter! The application needs to have Decrypt permissions with this key." });
@@ -307,7 +333,11 @@ export class Secrecy implements vscode.CodeActionProvider {
 							Tier: "Standard"
 						};
 						ssmClient.putParameter(params, function (err: Error, data: { Version: number, Tier: string }) {
-							if (err) { vscode.window.showErrorMessage(err.message); return; }
+							if (err) {
+								console.error(err);
+								vscode.window.showErrorMessage(err.message);
+								return;
+							}
 							else {
 								const edit = new vscode.WorkspaceEdit();
 								switch (doc.languageId) {
@@ -346,7 +376,7 @@ export class Secrecy implements vscode.CodeActionProvider {
 			let existing: KeyVaultSecret | undefined = undefined;
 			try {
 				existing = await kvClient.getSecret(name);
-			} catch{
+			} catch {
 			}
 			if (existing !== undefined) {
 				const newname = await vscode.window.showInputBox({ prompt: "There is already a secret with this name! Provide another or press enter to override with new version!" });
@@ -360,26 +390,32 @@ export class Secrecy implements vscode.CodeActionProvider {
 						break;
 				}
 			}
-			kvClient.setSecret(name, value);
-			const edit = new vscode.WorkspaceEdit();
-			switch (doc.languageId) {
-				case "javascript":
-				case "typescript":
-					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "new SecretClient('" + vscode.workspace.getConfiguration().get<string>("secrecy.AzureKeyVaultAdress", "") + "', new ManagedIdentityCredential())" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.getSecret('${name}')).value`);
-					break;
-				case "python":
-					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "SecretClient(vault_url='" + vscode.workspace.getConfiguration().get<string>("secrecy.AzureKeyVaultAdress", "") + "', credential=DefaultAzureCredential())" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.get_secret("${name}").value`);
-					break;
-				case "csharp":
-					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(new AzureServiceTokenProvider().KeyVaultTokenCallback))" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.GetSecretAsync("${vscode.workspace.getConfiguration().get("secrecy.AzureKeyVaultAdress")}/secrets/${name}")).Value`);
-					break;
-				case "java":
-					edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "new SecretClientBuilder().vaultUrl(\"" + vscode.workspace.getConfiguration().get<string>("secrecy.AzureKeyVaultAdress", "") + "\").credential(new DefaultAzureCredentialBuilder().build()).buildClient()" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.getSecret("${name}").getValue()`);
-					break;
-				default:
-					break;
-			}
-			vscode.workspace.applyEdit(edit);
+			kvClient.setSecret(name, value).then((value: KeyVaultSecret) => {
+
+				const edit = new vscode.WorkspaceEdit();
+				switch (doc.languageId) {
+					case "javascript":
+					case "typescript":
+						edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "new SecretClient('" + vscode.workspace.getConfiguration().get<string>("secrecy.AzureKeyVaultAdress", "") + "', new ManagedIdentityCredential())" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.getSecret('${name}')).value`);
+						break;
+					case "python":
+						edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "SecretClient(vault_url='" + vscode.workspace.getConfiguration().get<string>("secrecy.AzureKeyVaultAdress", "") + "', credential=DefaultAzureCredential())" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.get_secret("${name}").value`);
+						break;
+					case "csharp":
+						edit.replace(doc.uri, new vscode.Range(range.start, range.end), `(await ${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(new AzureServiceTokenProvider().KeyVaultTokenCallback))" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.GetSecretAsync("${vscode.workspace.getConfiguration().get("secrecy.AzureKeyVaultAdress")}/secrets/${name}")).Value`);
+						break;
+					case "java":
+						edit.replace(doc.uri, new vscode.Range(range.start, range.end), `${!vscode.workspace.getConfiguration().get("secrecy.newClientForAKV") ? "new SecretClientBuilder().vaultUrl(\"" + vscode.workspace.getConfiguration().get<string>("secrecy.AzureKeyVaultAdress", "") + "\").credential(new DefaultAzureCredentialBuilder().build()).buildClient()" : vscode.workspace.getConfiguration().get("secrecy.nameForAzureKVClient")}.getSecret("${name}").getValue()`);
+						break;
+					default:
+						break;
+				}
+				vscode.workspace.applyEdit(edit);
+			}).catch((err: Error) => {
+				console.error(err);
+				vscode.window.showErrorMessage(err.message);
+				return;
+			});
 		}
 	}
 }
@@ -401,4 +437,8 @@ async function initVault() {
 	};
 	process.env.VAULT_SKIP_VERIFY = vscode.workspace.getConfiguration().get("secrecy.HashicorpSelfsigned");
 	vault = require("node-vault")(options);
+}
+
+async function setUpHCVToken() {
+	await vscode.window.showInputBox({ prompt: "Provide Hashicorp token to use. This will be workspace specific." }).then(value => context.workspaceState.update("hashicorp_token", value));
 }
