@@ -441,4 +441,5 @@ async function initVault() {
 
 async function setUpHCVToken() {
 	await vscode.window.showInputBox({ prompt: "Provide Hashicorp token to use. This will be workspace specific." }).then(value => context.workspaceState.update("hashicorp_token", value));
+	await initVault();
 }
